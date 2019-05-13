@@ -1,4 +1,4 @@
-package cn.jystudio.bluetooth.escpos.command.sdk;
+﻿package cn.jystudio.bluetooth.escpos.command.sdk;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -218,7 +218,7 @@ public class PrinterCommand {
      * @param nFontType    字体类型(只对Ascii码有效)(0,1 48,49)
      */
     public static byte[] POS_Print_Text(String pszString, String encoding, int codepage,
-                                        int nWidthTimes, int nHeightTimes, int nFontType) {
+                                        int nWidthTimes, int nHeightTimes, int nFontType, int bold) {
         if (codepage < 0 || codepage > 255 || pszString == null || "".equals(pszString) || pszString.length() < 1) {
             return null;
         }
@@ -238,11 +238,18 @@ public class PrinterCommand {
         escT[2] = (byte) codepage;
         byte[] escM = Arrays.copyOf(Command.ESC_M, Command.ESC_M.length);
         escM[2] = (byte) nFontType;
+        /** Add Bold Text Utility */
+        byte[] escE = Arrays.copyOf(Command.ESC_E, Command.ESC_E.length);
+        byte[] escG = Arrays.copyOf(Command.ESC_G, Command.ESC_G.length);
+        escE[2] = (byte) bold;
+        escG[2] = (byte) bold;
+        /** Add Bold Text Utility */
+        
         byte[] data = null;
         if (codepage == 0) {
-            data = concatAll(gsExclamationMark, escT, Command.FS_and, escM, pbString);
+            data = concatAll(gsExclamationMark, escT, Command.FS_and, escM, escE, escG, pbString);
         } else {
-            data = concatAll(gsExclamationMark, escT, Command.FS_dot, escM, pbString);
+            data = concatAll(gsExclamationMark, escT, Command.FS_dot, escM, escE, escG, pbString);
         }
         return data;
     }

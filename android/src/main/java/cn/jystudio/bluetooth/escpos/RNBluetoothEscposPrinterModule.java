@@ -1,4 +1,4 @@
-
+﻿
 package cn.jystudio.bluetooth.escpos;
 
 import android.graphics.Bitmap;
@@ -137,12 +137,14 @@ public class RNBluetoothEscposPrinterModule extends ReactContextBaseJavaModule
             int widthTimes = 0;
             int heigthTimes=0;
             int fonttype=0;
+            int bold=0;
             if(options!=null) {
                 encoding = options.hasKey("encoding") ? options.getString("encoding") : "GBK";
                 codepage = options.hasKey("codepage") ? options.getInt("codepage") : 0;
                 widthTimes = options.hasKey("widthtimes") ? options.getInt("widthtimes") : 0;
                 heigthTimes = options.hasKey("heigthtimes") ? options.getInt("heigthtimes") : 0;
                 fonttype = options.hasKey("fonttype") ? options.getInt("fonttype") : 0;
+                bold = options.hasKey("bold") ? options.getInt("bold") : 0;
             }
             String toPrint = text;
 //            if ("UTF-8".equalsIgnoreCase(encoding)) {
@@ -150,7 +152,7 @@ public class RNBluetoothEscposPrinterModule extends ReactContextBaseJavaModule
 //                toPrint = new String(b, Charset.forName(encoding));
 //            }
 
-            byte[] bytes = PrinterCommand.POS_Print_Text(toPrint, encoding, codepage, widthTimes, heigthTimes, fonttype);
+            byte[] bytes = PrinterCommand.POS_Print_Text(toPrint, encoding, codepage, widthTimes, heigthTimes, fonttype, bold);
             if (sendDataByte(bytes)) {
                 promise.resolve(null);
             } else {
@@ -183,12 +185,14 @@ public class RNBluetoothEscposPrinterModule extends ReactContextBaseJavaModule
         int widthTimes = 0;
         int heigthTimes = 0;
         int fonttype = 0;
+        int bold=0;
         if (options != null) {
             encoding = options.hasKey("encoding") ? options.getString("encoding") : "GBK";
             codepage = options.hasKey("codepage") ? options.getInt("codepage") : 0;
             widthTimes = options.hasKey("widthtimes") ? options.getInt("widthtimes") : 0;
             heigthTimes = options.hasKey("heigthtimes") ? options.getInt("heigthtimes") : 0;
             fonttype = options.hasKey("fonttype") ? options.getInt("fonttype") : 0;
+            bold = options.hasKey("bold") ? options.getInt("bold") : 0;
         }
         Log.d(TAG,"encoding: "+encoding);
 
@@ -299,7 +303,7 @@ public class RNBluetoothEscposPrinterModule extends ReactContextBaseJavaModule
             try {
 //                byte[] toPrint = rowsToPrint[i].toString().getBytes("UTF-8");
 //                String text = new String(toPrint, Charset.forName(encoding));
-                if (!sendDataByte(PrinterCommand.POS_Print_Text(rowsToPrint[i].toString(), encoding, codepage, widthTimes, heigthTimes, fonttype))) {
+                if (!sendDataByte(PrinterCommand.POS_Print_Text(rowsToPrint[i].toString(), encoding, codepage, widthTimes, heigthTimes, fonttype, bold))) {
                     promise.reject("COMMAND_NOT_SEND");
                     return;
                 }
